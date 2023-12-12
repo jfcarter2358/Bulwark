@@ -2,7 +2,7 @@ package server
 
 import (
 	"bmp/config"
-	"bmp/constants.go"
+	"bmp/constants"
 	"bmp/frame"
 	"flag"
 	"log"

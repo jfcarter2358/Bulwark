@@ -2,7 +2,7 @@ package frame
 
 import (
 	"bmp/config"
-	"bmp/constants.go"
+	"bmp/constants"
 	"bmp/utils"
 	"fmt"
 	"strconv"

@@ -4,7 +4,7 @@
 package main
 
 import (
-	"bmp/constants.go"
+	"bmp/constants"
 	"bmp/server"
 	"fmt"
 

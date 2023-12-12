@@ -4,7 +4,7 @@ import (
 	"net/url"
 
 	"bmp/config"
-	"bmp/constants.go"
+	"bmp/constants"
 	"bmp/frame"
 
 	"github.com/gorilla/websocket"
