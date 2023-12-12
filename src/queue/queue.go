@@ -1,6 +1,7 @@
 package queue
 
 import (
+	bconst "bulwar/bulwarkmp/v1/constants"
 	"bulwark/config"
 	"fmt"
 	"time"
@@ -104,5 +105,5 @@ func Pop(name string) (string, string, error) {
 		queues[name] = q
 	}
 	locks[name] = false
-	return bmp.constants.CONTENT_TYPE_TEXT, out, err
+	return bconst.CONTENT_TYPE_TEXT, out, err
 }

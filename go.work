@@ -1,6 +1,6 @@
 go 1.18
 
 use (
-	./src/bulwarkmp/v1
+	./bulwarkmp/v1
 	./src
 )
