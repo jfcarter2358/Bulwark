@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	bconst "bulwarkmp/v1/constants"
+	bconst "github.com/jfcarter2358/bulwark/bulwarkmp/v1/constants"
 
 	"github.com/jfcarter2358/go-logger"
 )
