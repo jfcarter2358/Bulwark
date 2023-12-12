@@ -1,0 +1,62 @@
+.variables:
+  docker_org: jfcarter2358
+  platforms:
+    - linux/amd64
+    - linux/arm64
+    - linux/arm/v7
+  version: 0.2.0
+set-version:
+  help: Update version constant from VERSION file
+  cmd: |
+    version = ?(cat src/VERSION).strip()
+    sed -i 's/const VERSION = ".*"/const VERSION = "{version}"/' src/constants/constants.go
+build-docker:
+  help: Build Bulwark Docker image
+  cmd: |
+    stud set-version
+    docker build -t bulwark .
+push-docker:
+  help: Push Bulwark Docker image
+  cmd: |
+    version = ?(cat src/VERSION).strip()
+    docker tag bulwark {docker_org}/bulwark:{version}
+    docker push {docker_org}/bulwark:{version}
+publish:
+  help: Publish Bulwark image
+  cmd: |
+    stud set-version
+
+    platform_string = ','.join(platforms)
+    version = ?(cat src/VERSION).strip()
+
+    print(f"Running build command: docker buildx build --platform {platform_string} -t {docker_org}/bulwark:{version} --push .")
+    docker buildx build --platform {platform_string} -t {docker_org}/bulwark:{version} --push .
+
+    print('Done!')
+kill-docker:
+  help: Kill docker-compose deployments
+  cmd: |
+    docker-compose down --remove-orphans
+    docker compose rm -f
+run-docker:
+  help: Deploy local image of Bulwark via docker-compose
+  cmd: |
+    docker compose down --remove-orphans
+    docker compose rm -f
+    docker compose up
+gen-certs:
+  help: Generate local certificates for https testing
+  cmd: |
+    rm -rf temp
+    mkdir -p temp
+
+    echo "Generating root CA"
+    $(openssl genrsa -out temp/rootCA.key 4096)
+    $(openssl req -x509 -new -nodes -key temp/rootCA.key -subj "/C=US/ST=IL/O=Scaffold/CN=bulwark" -sha256 -days 1024 -out temp/rootCA.crt)
+    echo "Done!"
+
+    echo "Generating certs..."
+    $(openssl genrsa -out temp/cert.key 2048)
+    $(openssl req -new -sha256 -key temp/cert.key -subj "/C=US/ST=IL/O=Scaffold/CN=bulwark" -out temp/cert.csr)
+    $(openssl x509 -req -extfile <(printf "subjectAltName=DNS:bulwark,DNS:localhost") -in temp/cert.csr -CA temp/rootCA.crt -CAkey temp/rootCA.key -CAcreateserial -out temp/cert.crt -days 500 -sha256)
+    echo "Done!"
